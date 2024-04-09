@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "kn-girls-day-24"
+version = "0.1.0"
+description = ""
+authors = ["jstet <mail@jstet.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+billboard-py = "^7.0.1"
+spotipy = "^2.23.0"
+python-dotenv = "^1.0.1"
+pandas = "^2.2.1"
+tqdm = "^4.66.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
