@@ -25,3 +25,36 @@ def test_process_track():
     track = {"artist": "U2", "song": "The Fly"}
     result = process_track(track)
     assert result["uri"]
+
+    track = {"artist": "Love", "song": "Seven and Seven Is"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "MFSB", "song": "Sexy"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "Roy Head", "song": "To Make a Big Man Cry"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "P!nk", "song": "U + Ur Hand"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "RuPaul", "song": "Snapshot"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "U2", "song": "One"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "703", "song": "Steelo"}
+    result = process_track(track)
+    assert result["uri"]
+
+    track = {"artist": "T.I.", "song": "I'm Back"}
+    result = process_track(track)
+    assert result["uri"]
+
