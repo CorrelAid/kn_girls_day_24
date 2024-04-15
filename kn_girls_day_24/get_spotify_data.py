@@ -11,7 +11,7 @@ from tqdm import tqdm
 max_workers_no = 1
 
 def wait_jitter():
-    time.sleep(random.uniform(0.2, 1.0))
+    time.sleep(random.uniform(0.2, 0.5))
 
 def chunks(xs, n):
     n = max(1, n)
@@ -21,7 +21,7 @@ def spotify_init():
     load_dotenv()
     print("Spotify credentials loaded")
     auth_manager = SpotifyClientCredentials()
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify = spotipy.Spotify(auth_manager=auth_manager, requests_timeout=120, retries=12, backoff_factor=0.5)
     return spotify
 
 def clean_string(string):
@@ -39,7 +39,7 @@ def clean_string(string):
 spotify = spotify_init()
 
 def process_track(track):
-    # wait_jitter()
+    wait_jitter()
     artist = track["artist"]
     song = track["song"]
     cleaned_artist = clean_string(artist)
@@ -47,7 +47,10 @@ def process_track(track):
     # alternative would be track: artist: but this doesnt work for some track/artist combo
     # it is assumed that a simple search finds the right thing
     query = f"{cleaned_artist}%2520{cleaned_song}"   
-    result = spotify.search(q=query, type="track", limit=1)
+    try:
+        result = spotify.search(q=query, type="track", limit=1)
+    except Exception as e:
+        result = spotify.search(q=query, type="track", limit=1)
     if len(result["tracks"]["items"]) == 0:
         print(f"No results for {artist} - {song}, {query}")
         return None
@@ -56,20 +59,20 @@ def process_track(track):
 def spotify_uris(track_lst):
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers_no) as executor:
         results = list(tqdm(executor.map(process_track, track_lst), total=len(track_lst), desc="Processing Tracks"))
-        
     results = [i for i in results if i is not None]
-       
     df = pd.DataFrame(results)
-    
     return df
 
 def spotify_audio_features(uris):
   results = []
 
   def get_features(uri_chunk):
-    spotify_audio_features = spotify.audio_features(uri_chunk)
-    # wait_jitter()
-    return spotify_audio_features
+    try:
+        wait_jitter()
+        return spotify.audio_features(uri_chunk)
+    except Exception as e:
+        wait_jitter()
+        return spotify_audio_features(uri_chunk)
 
   with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers_no) as executor:  # Adjust max_workers as needed
     # Submit tasks for each chunk of URIs

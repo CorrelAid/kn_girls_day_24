@@ -6,11 +6,13 @@ def get_data(limit=None, out_path="./data/data.csv"):
     print("Retrieving Billboard data..")
     billboard_df = billboard_hot_100_songs()
     print(f"{len(billboard_df)} rows in billboard data")
+    # We will only get spotify data for songs that have been on chart rank 1
+    filtered_billboard_df = billboard_df.query("this_week == 1")
     if limit is not None:
-        unique_artist_song_combinations = billboard_df[["artist", "song"]].drop_duplicates().to_dict(orient='records')[:limit]
+        unique_artist_song_combinations = filtered_billboard_df[["artist", "song"]].drop_duplicates().to_dict(orient='records')[:limit]
     else:
-        unique_artist_song_combinations = billboard_df[["artist", "song"]].drop_duplicates().to_dict(orient='records')
-    print(f"{len(unique_artist_song_combinations)} unique artist song combinations")
+        unique_artist_song_combinations = filtered_billboard_df[["artist", "song"]].drop_duplicates().to_dict(orient='records')
+    print(f"{len(unique_artist_song_combinations)} unique artist song combinations in filtered billboard data")
 
     print("Retrieving Spotify uris..")
     uris_df = spotify_uris(unique_artist_song_combinations)
