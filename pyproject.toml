@@ -12,6 +12,8 @@ spotipy = "^2.23.0"
 python-dotenv = "^1.0.1"
 pandas = "^2.2.1"
 tqdm = "^4.66.2"
+numpy = "^1.26.4"
+matplotlib = "^3.8.4"
 
 
 [tool.poetry.group.dev.dependencies]
